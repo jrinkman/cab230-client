@@ -1,8 +1,10 @@
 import page from './page';
-import transition from './transition';
+import splash from './splash';
+import notFound from './notFound';
 
 // Export all motion variants
-export default {
+export {
   page,
-  transition,
+  splash,
+  notFound,
 };

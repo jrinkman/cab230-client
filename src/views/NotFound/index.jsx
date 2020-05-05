@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 // Page animations
-import { splash } from '../../motion';
+import { notFound } from '../../motion';
 
 // Component styles
 import styles from './styles';
@@ -20,7 +20,7 @@ import styles from './styles';
 // Create the useStyles function
 const useStyles = makeStyles(styles);
 
-export default function Home() {
+export default function NotFound() {
   // Generate class names
   const classes = useStyles();
 
@@ -30,17 +30,17 @@ export default function Home() {
       initial="initial"
       animate="in"
       exit="out"
-      variants={splash.variants}
-      transition={splash.transition}
+      variants={notFound.variants}
+      transition={notFound.transition}
       className={classes.motionWrapper}
     >
       <div className={classes.root}>
-        <Typography variant="h3" style={{ fontWeight: 600 }}>Welcome to Stock Analytics!</Typography>
-        <Typography variant="h5" color="textSecondary" className={classes.subtitle}>Your simple solution to market analysis is here.</Typography>
+        <Typography variant="h1" style={{ fontWeight: 600 }}>404 :(</Typography>
+        <Typography variant="h5" color="textSecondary" className={classes.subtitle}>We can&apos;t find the page you&apos;re after</Typography>
         <div className={classes.imgWrapper}>
-          <img className={classes.img} src="images/welcome.png" alt="" />
+          <img className={classes.img} src="images/not-found.png" alt="" />
         </div>
-        <Button component={Link} to="/stocks" variant="contained" color="primary" size="large">Let&apos;s go</Button>
+        <Button component={Link} to="/" variant="contained" color="primary" size="large">take me home</Button>
       </div>
     </motion.div>
   );

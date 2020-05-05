@@ -24,6 +24,17 @@ const base = {
         borderRadius: 8,
       },
     },
+    MuiFilledInput: {
+      root: {
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+      },
+    },
+    MuiInputAdornment: {
+      filled: {
+        marginBottom: 15,
+      },
+    },
   },
 };
 
