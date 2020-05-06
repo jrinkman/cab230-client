@@ -30,6 +30,9 @@ import { NavLink } from 'react-router-dom';
 // Authentication dialogs
 import AuthDialog from '../AuthDialog';
 
+// Authentication content
+import authContext from '../../auth/context';
+
 // Define a set drawer width
 const drawerWidth = 240;
 
@@ -114,6 +117,9 @@ export default function Layout(props) {
   // Grab our children from the props
   const { children } = props;
 
+  // Grab our auth context
+  const auth = React.useContext(authContext);
+
   // Generate class name
   const classes = useStyles();
 
@@ -156,7 +162,7 @@ export default function Layout(props) {
 
   return (
     <>
-      <AuthDialog open={authOpen} onClose={handleAuthClose} />
+      <AuthDialog auth={auth} open={authOpen} onClose={handleAuthClose} />
       <div className={classes.root}>
         <CssBaseline />
         <AppBar
@@ -180,9 +186,20 @@ export default function Layout(props) {
             <Typography className={classes.title} variant="h6" noWrap>
               StockAnalytics
             </Typography>
-            <Button color="inherit" onClick={handleAuthOpen}>
-              Login
-            </Button>
+            {auth.logged_in ? (
+              <Button
+                color="inherit"
+                onClick={() => {
+                  auth.api.logout();
+                }}
+              >
+                Logout
+              </Button>
+            ) : (
+              <Button color="inherit" onClick={handleAuthOpen}>
+                Login
+              </Button>
+            )}
           </Toolbar>
         </AppBar>
         <Drawer

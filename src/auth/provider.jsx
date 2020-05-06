@@ -11,7 +11,7 @@ export default function AuthProvider(props) {
   let initialState;
 
   // Try and grab an existing auth state
-  const authStorage = localStorage.getItem('auth');
+  const authStorage = JSON.parse(localStorage.getItem('auth'));
 
   // Check to see whether we're already logged in
   // and if the token is still valid
@@ -28,7 +28,7 @@ export default function AuthProvider(props) {
     };
 
     // Also update local storage
-    localStorage.setItem('auth', initialState);
+    localStorage.setItem('auth', JSON.stringify(initialState));
   }
 
   // Initialize our auth state

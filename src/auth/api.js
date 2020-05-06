@@ -11,18 +11,9 @@ class API {
     this.instance = axios.create({
       baseURL: 'http://131.181.190.87:3000',
     });
-
-    // Create a store to save values
-    this.store = {};
   }
 
-  async __api(url, method, checkStore = true, data = {}) {
-    // If the stored value exists and we want
-    // to use the store, return it
-    if (checkStore && this.store[url]) {
-      return this.store[url];
-    }
-
+  async __api(url, method, data = {}) {
     // Make a HTTP request
     const resp = await this.instance.request({
       url,
@@ -32,11 +23,6 @@ class API {
         Authorization: `${this.state.token_type || ''} ${this.state.token || ''}`,
       },
     });
-
-    // If checkStore is true, update the store
-    if (checkStore) {
-      this.store[url] = resp.data;
-    }
 
     // Return the response data
     return resp.data;
@@ -57,15 +43,15 @@ class API {
     return this.__api(`/stocks/authed/${symbol}?from=${from}&to=${to}`, 'get');
   }
 
-  async register(email, password) {
+  async register(data) {
     // Make the HTTP request via axios
-    return this.__api('/users/register', 'post', false, {
-      email,
-      password,
+    return this.__api('/user/register', 'post', {
+      email: data.email,
+      password: data.password,
     });
   }
 
-  async login(email, password) {
+  async login(data) {
     // Make sure we're not already logged in
     if (this.state.logged_in) {
       return;
@@ -73,9 +59,9 @@ class API {
 
     // Make the HTTP request via axios
     // eslint-disable-next-line camelcase
-    const { token, token_type, expires } = await this.__api('/users/login', 'post', false, {
-      email,
-      password,
+    const { token, token_type, expires_in } = await this.__api('/user/login', 'post', {
+      email: data.email,
+      password: data.password,
     });
 
     // Update auth information
@@ -83,12 +69,13 @@ class API {
       logged_in: true,
       token,
       token_type,
-      expires: Date.now() + expires * 1000,
+      // eslint-disable-next-line camelcase
+      expires: Date.now() + expires_in * 1000,
     };
 
     // Update auth state & local storage
     this.setAuth(newAuth);
-    localStorage.setItem('auth', newAuth);
+    localStorage.setItem('auth', JSON.stringify(newAuth));
   }
 
   logout() {
@@ -102,7 +89,7 @@ class API {
 
     // Update the auth state and local storage
     this.setAuth(newAuth);
-    localStorage.setItem('auth', newAuth);
+    localStorage.setItem('auth', JSON.stringify(newAuth));
   }
 }
 
