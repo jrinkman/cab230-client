@@ -35,6 +35,11 @@ const base = {
         marginBottom: 15,
       },
     },
+    MuiPaper: {
+      rounded: {
+        borderRadius: 8,
+      },
+    },
   },
 };
 

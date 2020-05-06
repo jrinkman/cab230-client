@@ -12,6 +12,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import lightTheme from './theme/light';
 import darkTheme from './theme/dark';
 
+// Authentication provider
+import AuthProvider from './auth/provider';
+
 // Main component (with switch)
 import Main from './Main';
 
@@ -30,10 +33,12 @@ function App() {
   // Render out the application providers
   return (
     <Router>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Main />
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Main />
+        </ThemeProvider>
+      </AuthProvider>
     </Router>
   );
 }

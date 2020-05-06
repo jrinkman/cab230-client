@@ -82,7 +82,6 @@ export default function Stocks() {
                 options={sectors}
                 renderInput={(params) => (
                   <TextField
-                    // eslint-disable-next-line react/jsx-props-no-spreading
                     {...params}
                     label="Search"
                     margin="normal"

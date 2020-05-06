@@ -1,6 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+
+// Material UI imports
+import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import { makeStyles } from '@material-ui/core/styles';
 
 // Material UI icons
 import MenuIcon from '@material-ui/icons/Menu';
@@ -24,8 +27,13 @@ import ChartIcon from '@material-ui/icons/TimelineRounded';
 // React router nav link
 import { NavLink } from 'react-router-dom';
 
+// Authentication dialogs
+import AuthDialog from '../AuthDialog';
+
+// Define a set drawer width
 const drawerWidth = 240;
 
+// Generate the layout styles
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -73,6 +81,9 @@ const useStyles = makeStyles((theme) => ({
     overflowX: 'hidden',
     width: theme.spacing(7) + 1,
   },
+  title: {
+    flexGrow: 1,
+  },
   toolbar: {
     display: 'flex',
     alignItems: 'center',
@@ -98,10 +109,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// Export the layout component
 export default function Layout(props) {
+  // Grab our children from the props
   const { children } = props;
+
+  // Generate class name
   const classes = useStyles();
+
+  // Create an open-close boolean state
   const [open, setOpen] = React.useState(false);
+
+  // Create an open-close login dialog state
+  const [authOpen, setAuthOpen] = React.useState(false);
 
   function NavListItem(navProps) {
     return (
@@ -109,7 +129,6 @@ export default function Layout(props) {
         button
         component={NavLink}
         activeClassName={classes.listItemActive}
-        // eslint-disable-next-line react/jsx-props-no-spreading
         {...navProps}
       />
     );
@@ -125,73 +144,89 @@ export default function Layout(props) {
     setOpen(false);
   };
 
+  // Create a handler for opening the sidebar
+  const handleAuthOpen = () => {
+    setAuthOpen(true);
+  };
+
+  // Create a handler for opening the sidebar
+  const handleAuthClose = () => {
+    setAuthOpen(false);
+  };
+
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            StockAnalytics
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
-        classes={{
-          paper: clsx({
+    <>
+      <AuthDialog open={authOpen} onClose={handleAuthClose} />
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: open,
+          })}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, {
+                [classes.hide]: open,
+              })}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography className={classes.title} variant="h6" noWrap>
+              StockAnalytics
+            </Typography>
+            <Button color="inherit" onClick={handleAuthOpen}>
+              Login
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          className={clsx(classes.drawer, {
             [classes.drawerOpen]: open,
             [classes.drawerClose]: !open,
-          }),
-        }}
-      >
-        <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          <NavListItem exact to="/">
-            <ListItemIcon><HomeIcon /></ListItemIcon>
-            <ListItemText primary="Home" />
-          </NavListItem>
-          <NavListItem to="/stocks">
-            <ListItemIcon><BusinessIcon /></ListItemIcon>
-            <ListItemText primary="Stocks" />
-          </NavListItem>
-          <NavListItem to="/quote">
-            <ListItemIcon><BarsIcon /></ListItemIcon>
-            <ListItemText primary="Quote" />
-          </NavListItem>
-          <NavListItem to="/history">
-            <ListItemIcon><ChartIcon /></ListItemIcon>
-            <ListItemText primary="Price History" />
-          </NavListItem>
-        </List>
-      </Drawer>
-      <main className={classes.content}>
-        {React.Children.toArray(children)}
-      </main>
-    </div>
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
+          }}
+        >
+          <div className={classes.toolbar}>
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
+            <NavListItem exact to="/">
+              <ListItemIcon><HomeIcon /></ListItemIcon>
+              <ListItemText primary="Home" />
+            </NavListItem>
+            <NavListItem to="/stocks">
+              <ListItemIcon><BusinessIcon /></ListItemIcon>
+              <ListItemText primary="Stocks" />
+            </NavListItem>
+            <NavListItem to="/quote">
+              <ListItemIcon><BarsIcon /></ListItemIcon>
+              <ListItemText primary="Quote" />
+            </NavListItem>
+            <NavListItem to="/history">
+              <ListItemIcon><ChartIcon /></ListItemIcon>
+              <ListItemText primary="Price History" />
+            </NavListItem>
+          </List>
+        </Drawer>
+        <main className={classes.content}>
+          {React.Children.toArray(children)}
+        </main>
+      </div>
+    </>
   );
 }
