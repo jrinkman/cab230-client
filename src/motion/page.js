@@ -8,14 +8,17 @@ const variants = {
   initial: {
     opacity: 0,
     x: '25vw',
+    overflowY: 'hidden',
   },
   in: {
     opacity: 1,
     x: 0,
+    overflowY: 'auto',
   },
   out: {
     opacity: 0,
     x: '-25vw',
+    overflowY: 'hidden',
   },
 };
 

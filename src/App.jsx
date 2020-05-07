@@ -1,16 +1,11 @@
 import React from 'react';
 
 // Material UI imports
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 // React router imports
 import { BrowserRouter as Router } from 'react-router-dom';
-
-// Theme imports
-import lightTheme from './theme/light';
-import darkTheme from './theme/dark';
 
 // Authentication provider
 import AuthProvider from './auth/provider';
@@ -18,25 +13,28 @@ import AuthProvider from './auth/provider';
 // Main component (with switch)
 import Main from './Main';
 
-function App() {
-  // Find out whether the user prefers dark mode by default
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)') || false;
+// Theme imports
+import lightTheme from './theme/light';
+import darkTheme from './theme/dark';
+import useDarkMode from './theme/useDarkMode';
 
-  // Generate a base theme
+function App() {
+  // Listen to the useDarkMode hook
+  const [theme, toggleDarkMode] = useDarkMode();
 
   // Create a theme memo
-  const theme = React.useMemo(
-    () => createMuiTheme(prefersDarkMode ? darkTheme : lightTheme),
-    [prefersDarkMode],
+  const currentTheme = React.useMemo(
+    () => createMuiTheme(theme === 'dark' ? darkTheme : lightTheme),
+    [theme],
   );
 
   // Render out the application providers
   return (
     <Router>
       <AuthProvider>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={currentTheme}>
           <CssBaseline />
-          <Main />
+          <Main theme={theme} toggleDarkMode={toggleDarkMode} />
         </ThemeProvider>
       </AuthProvider>
     </Router>

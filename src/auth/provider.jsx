@@ -15,7 +15,7 @@ export default function AuthProvider(props) {
 
   // Check to see whether we're already logged in
   // and if the token is still valid
-  if (authStorage && authStorage.logged_in && authStorage.expires < Date.now()) {
+  if (authStorage && authStorage.logged_in && authStorage.expires > Date.now()) {
     // If our last login is valid, update our auth to the local storage value
     initialState = authStorage;
   } else {

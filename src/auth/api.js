@@ -22,6 +22,7 @@ class API {
       headers: {
         Authorization: `${this.state.token_type || ''} ${this.state.token || ''}`,
       },
+      timeout: 3000,
     });
 
     // Return the response data

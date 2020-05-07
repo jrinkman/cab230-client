@@ -15,6 +15,11 @@ const light = {
     text: {
       primary: blueGrey[900],
     },
+    secondary: {
+      light: blueGrey[300],
+      main: blueGrey[500],
+      dark: blueGrey[700],
+    },
   },
 };
 

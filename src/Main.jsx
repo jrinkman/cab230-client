@@ -12,13 +12,16 @@ import NotFound from './views/NotFound';
 // Layout import
 import Layout from './components/Layout';
 
-export default function Main() {
+export default function Main(props) {
+  // Grab our theme props
+  const { theme, toggleDarkMode } = props;
+
   // Get our current page location
   const location = useLocation();
 
   // Render the main body of the page
   return (
-    <Layout>
+    <Layout theme={theme} toggleDarkMode={toggleDarkMode}>
       <AnimatePresence>
         <Switch location={location} key={location.pathname}>
           <Route

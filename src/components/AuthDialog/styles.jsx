@@ -1,17 +1,12 @@
 export default (theme) => ({
   title: {
     fontWeight: 700,
-  },
-  tabs: {
-    borderBottom: `2px solid ${theme.palette.divider}`,
-    marginBottom: theme.spacing(2.5),
+    marginTop: theme.spacing(2.5),
   },
   errorCard: {
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    marginBottom: theme.spacing(2),
     padding: theme.spacing(1),
     backgroundColor: theme.palette.error.main,
+    borderRadius: 0,
   },
   errorCardText: {
     color: theme.palette.error.contrastText,

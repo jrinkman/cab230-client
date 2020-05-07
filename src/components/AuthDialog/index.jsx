@@ -14,12 +14,16 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import Grow from '@material-ui/core/Grow';
+import Collapse from '@material-ui/core/Collapse';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 
 // Component styles
 import styles from './styles';
+
+// Error message handler
+import getErrorMessage from '../../helpers/getErrorMessage';
 
 // Create the useStyles function
 const useStyles = makeStyles(styles);
@@ -138,11 +142,10 @@ export default function AuthDialog(props) {
       // Close the dialog
       onClose();
     } catch (error) {
-      console.log(error);
       // Update the login form state with the error
       setFormLogin({
         ...formLogin,
-        error: error.response.data,
+        error: getErrorMessage(error),
       });
     }
 
@@ -172,27 +175,27 @@ export default function AuthDialog(props) {
       // Make the registration request
       await auth.api.register(formRegister.values);
 
-      // once the request is sent, update state again
+      // Try and login
+      await auth.api.login(formRegister.values);
+
+      // Disable the processing flag
       setIsProcessing(false);
 
-      // Try and login
-      setTab(0);
-      setFormLogin(formRegister.values);
-      handleLogin();
+      // Close the dialog
+      onClose();
 
       // Update the login values
     } catch (error) {
-      console.log(error);
       // Update the login form state with the error
       setFormRegister({
         ...formRegister,
-        error: error.response.data,
+        error: getErrorMessage(error),
       });
 
       // Disable the processing flag
       setIsProcessing(false);
     }
-  }, [isProcessing, formRegister, auth.api, handleLogin]);
+  }, [isProcessing, formRegister, auth.api, onClose]);
 
   // Grab the theme provider
   const theme = useTheme();
@@ -205,6 +208,8 @@ export default function AuthDialog(props) {
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Render the dialog
+  // testing-user@mail.com
+  // 1234
   return (
     <Dialog
       fullScreen={fullScreen}
@@ -215,7 +220,6 @@ export default function AuthDialog(props) {
     >
       <Tabs
         variant="fullWidth"
-        className={classes.tabs}
         value={tab}
         onChange={handleChange}
         aria-label="login and register tabs"
@@ -223,20 +227,16 @@ export default function AuthDialog(props) {
         <Tab disabled={isProcessing} label="Login" {...a11yProps(0)} />
         <Tab disabled={isProcessing} label="Register" {...a11yProps(1)} />
       </Tabs>
-      {tab === 0 && formLogin.error && (
-        <Card className={classes.errorCard}>
+      <Collapse
+        in={Boolean(tab === 0 && formLogin.error)
+        || Boolean(tab === 1 && formRegister.error)}
+      >
+        <Card variant="outlined" className={classes.errorCard}>
           <Typography className={classes.errorCardText}>
-            {formLogin.error.message || 'An error unknown occured'}
+            {tab === 0 ? formLogin.error : formRegister.error}
           </Typography>
         </Card>
-      )}
-      {tab === 1 && formRegister.error && (
-        <Card className={classes.errorCard}>
-          <Typography className={classes.errorCardText}>
-            {formRegister.error.message || 'An error unknown occured'}
-          </Typography>
-        </Card>
-      )}
+      </Collapse>
       <div className={classes.header}>
         <Typography variant="h4" className={classes.title}>
           {tab === 0 ? 'Login' : 'Register'}

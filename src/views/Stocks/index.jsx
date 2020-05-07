@@ -24,11 +24,20 @@ import match from 'autosuggest-highlight/match';
 // Framer Motion div
 import { motion } from 'framer-motion';
 
+// Table imports
+import StockTable from './components/StockTable';
+
 // Toolbar padding import
 import ToolbarPadding from '../../components/ToolbarPadding';
 
 // Page animations
 import { page } from '../../motion';
+
+// Error message handler
+import getErrorMessage from '../../helpers/getErrorMessage';
+
+// Authentication content
+import authContext from '../../auth/context';
 
 // Component styles
 import styles from './styles';
@@ -55,6 +64,48 @@ export default function Stocks() {
   // Generate class names
   const classes = useStyles();
 
+  // Grab our auth context
+  const auth = React.useContext(authContext);
+
+  // Create a state to store search
+  const [search, setSearch] = React.useState('');
+
+  // Create a loading, error & rows state
+  const [loading, setLoading] = React.useState(true);
+  const [rows, setRows] = React.useState([]);
+  const [error, setError] = React.useState(null);
+
+  // Since our page state has to be managed here, create it
+  const [currentPage, setPage] = React.useState(0);
+
+  // Create an effect hook for the stock symbols
+  React.useEffect(() => {
+    async function getStockSymbols() {
+      try {
+        // Reset the page
+        setPage(0);
+
+        // Ensure the loading animation is active
+        setLoading(true);
+
+        // Retrieve the stock symbols
+        const symbols = await auth.api.getStockSymbols(search || null);
+
+        // Disable the loading animation
+        setLoading(false);
+
+        // Update the symbols in the table props
+        setRows(symbols);
+      } catch (reqError) {
+        // Update the error state
+        setError(getErrorMessage(reqError));
+      }
+    }
+
+    getStockSymbols();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
+
   // Render the stocks page
   return (
     <motion.div
@@ -65,62 +116,72 @@ export default function Stocks() {
       transition={page.transition}
       className={classes.motionWrapper}
     >
-      <div className={classes.root}>
-        <Container maxWidth="lg">
-          <ToolbarPadding />
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm="auto" style={{ flexGrow: 1 }}>
-              <Typography variant="h4" style={{ fontWeight: 600 }}>Stocks</Typography>
-              <Typography variant="h6" color="textSecondary">View available stocks</Typography>
-            </Grid>
-            <Grid item xs={12} sm={5} md={4} lg={3}>
-              <Autocomplete
-                freeSolo
-                fullWidth
-                id="free-solo-2-demo"
-                disableClearable
-                options={sectors}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Search"
-                    margin="normal"
-                    variant="outlined"
-                    InputProps={{
-                      ...params.InputProps,
-                      type: 'search',
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-                renderOption={(option, { inputValue }) => {
-                  // Find the parts where the input string matches the option
-                  const matched = match(option, inputValue);
-
-                  // Parse the matched areas into parts
-                  const parts = parse(option, matched);
-
-                  // Render the autocomplete option
-                  return (
-                    <div>
-                      {parts.map((part, index) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
-                          {part.text}
-                        </span>
-                      ))}
-                    </div>
-                  );
-                }}
-              />
-            </Grid>
+      <Container className={classes.container} maxWidth="lg">
+        <ToolbarPadding />
+        <Grid className={classes.grid} container spacing={2} alignItems="center">
+          <Grid item xs={12} sm="auto" style={{ flexGrow: 1 }}>
+            <Typography variant="h4" style={{ fontWeight: 600 }}>Stocks</Typography>
+            <Typography variant="h6" color="textSecondary">View available stocks</Typography>
           </Grid>
-        </Container>
-      </div>
+          <Grid item xs={12} sm={5} md={4} lg={3}>
+            <Autocomplete
+              freeSolo
+              fullWidth
+              id="free-solo-2-demo"
+              disableClearable
+              options={sectors}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Search (Press Enter)"
+                  margin="normal"
+                  variant="outlined"
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13) {
+                      setSearch(e.target.value);
+                    }
+                  }}
+                  InputProps={{
+                    ...params.InputProps,
+                    type: 'search',
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
+              renderOption={(option, { inputValue }) => {
+                // Find the parts where the input string matches the option
+                const matched = match(option, inputValue);
+
+                // Parse the matched areas into parts
+                const parts = parse(option, matched);
+
+                // Render the autocomplete option
+                return (
+                  <div>
+                    {parts.map((part, index) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                        {part.text}
+                      </span>
+                    ))}
+                  </div>
+                );
+              }}
+            />
+          </Grid>
+        </Grid>
+        <StockTable
+          loading={loading}
+          page={currentPage}
+          setPage={setPage}
+          rows={rows}
+          style={{ flexGrow: 1 }}
+        />
+      </Container>
     </motion.div>
   );
 }

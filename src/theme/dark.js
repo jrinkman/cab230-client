@@ -1,3 +1,6 @@
+// Material UI color imports
+import blueGrey from '@material-ui/core/colors/blueGrey';
+
 // Base theme
 import base from './base';
 
@@ -9,6 +12,11 @@ const dark = {
   ...base,
   palette: {
     type: 'dark',
+    secondary: {
+      light: blueGrey[300],
+      main: blueGrey[500],
+      dark: blueGrey[700],
+    },
   },
 };
 

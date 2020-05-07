@@ -40,7 +40,7 @@ export default function Home() {
         <div className={classes.imgWrapper}>
           <img className={classes.img} src="images/welcome.png" alt="" />
         </div>
-        <Button component={Link} to="/stocks" variant="contained" color="primary" size="large">Let&apos;s go</Button>
+        <Button component={Link} to="/stocks" variant="contained" color="secondary" size="large">Let&apos;s go</Button>
       </div>
     </motion.div>
   );

@@ -23,6 +23,8 @@ import HomeIcon from '@material-ui/icons/HomeRounded';
 import BarsIcon from '@material-ui/icons/BarChartRounded';
 import BusinessIcon from '@material-ui/icons/BusinessRounded';
 import ChartIcon from '@material-ui/icons/TimelineRounded';
+import DarkModeIcon from '@material-ui/icons/Brightness2Rounded';
+import LightModeIcon from '@material-ui/icons/Brightness5Rounded';
 
 // React router nav link
 import { NavLink } from 'react-router-dom';
@@ -102,7 +104,6 @@ const useStyles = makeStyles((theme) => ({
     overflowX: 'hidden',
     overflowY: 'hidden',
     flexGrow: 1,
-    padding: theme.spacing(3),
   },
   listItemActive: {
     backgroundColor: theme.palette.action.selected,
@@ -110,12 +111,15 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary,
     },
   },
+  darkModeToggle: {
+    marginRight: theme.spacing(1),
+  },
 }));
 
 // Export the layout component
 export default function Layout(props) {
   // Grab our children from the props
-  const { children } = props;
+  const { children, theme, toggleDarkMode } = props;
 
   // Grab our auth context
   const auth = React.useContext(authContext);
@@ -186,20 +190,34 @@ export default function Layout(props) {
             <Typography className={classes.title} variant="h6" noWrap>
               StockAnalytics
             </Typography>
-            {auth.logged_in ? (
-              <Button
+            <div>
+              <IconButton
                 color="inherit"
-                onClick={() => {
-                  auth.api.logout();
-                }}
+                className={classes.darkModeToggle}
+                onClick={toggleDarkMode}
               >
-                Logout
-              </Button>
-            ) : (
-              <Button color="inherit" onClick={handleAuthOpen}>
-                Login
-              </Button>
-            )}
+                {theme === 'light' ? <LightModeIcon /> : <DarkModeIcon />}
+              </IconButton>
+              {auth.logged_in ? (
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  onClick={() => {
+                    auth.api.logout();
+                  }}
+                >
+                  Logout
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  onClick={handleAuthOpen}
+                >
+                  Login
+                </Button>
+              )}
+            </div>
           </Toolbar>
         </AppBar>
         <Drawer
