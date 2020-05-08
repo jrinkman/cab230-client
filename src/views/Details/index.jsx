@@ -63,7 +63,7 @@ export default function Details() {
 
   // Create an effect hook for the stock symbols
   React.useEffect(() => {
-    async function getStockSymbols() {
+    async function getStockLatest() {
       try {
         // Reset the error the state
         setError(null);
@@ -85,7 +85,7 @@ export default function Details() {
       }
     }
 
-    getStockSymbols();
+    getStockLatest();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [symbol]);
 
@@ -168,10 +168,7 @@ export default function Details() {
             if (auth.logged_in) {
               return (
                 <HistoryTable
-                  margin={{
-                    left: 0, right: 0, top: 0, bottom: 0,
-                  }}
-                  symbol={latest ? latest.symbol : null}
+                  symbol={latest.symbol}
                 />
               );
             }

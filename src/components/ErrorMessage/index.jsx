@@ -18,7 +18,7 @@ const useStyles = makeStyles(styles);
 export default function ErrorMessage(props) {
   // Grab our message and helper text from the props
   const {
-    title, message, helper, image,
+    title, message, helper, image, small,
   } = props;
 
   // Use the location hook
@@ -38,7 +38,7 @@ export default function ErrorMessage(props) {
   // Render the error message
   return (
     <div className={classes.empty}>
-      <div className={classes.imgWrapper}>
+      <div className={small ? classes.imgWrapperSmall : classes.imgWrapper}>
         <img className={classes.img} src={`${depth}images/${image || 'error'}.png`} alt="" />
       </div>
       <Typography variant="h5" className={classes.emptyHeader}>

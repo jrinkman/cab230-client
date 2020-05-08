@@ -16,6 +16,10 @@ export default (theme) => ({
     maxWidth: 450,
     minWidth: 250,
   },
+  imgWrapperSmall: {
+    maxWidth: 350,
+    minWidth: 150,
+  },
   img: {
     width: '100%',
     height: '100%',

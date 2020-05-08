@@ -5,8 +5,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 // Material UI picker imports
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import LuxonUtils from '@date-io/luxon';
+import { LocalizationProvider } from '@material-ui/pickers';
+import LuxonUtils from '@material-ui/pickers/adapter/luxon';
 
 // React router imports
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -35,14 +35,14 @@ function App() {
   // Render out the application providers
   return (
     <Router>
-      <MuiPickersUtilsProvider utils={LuxonUtils}>
+      <LocalizationProvider dateAdapter={LuxonUtils}>
         <AuthProvider>
           <ThemeProvider theme={currentTheme}>
             <CssBaseline />
             <Main theme={theme} toggleDarkMode={toggleDarkMode} />
           </ThemeProvider>
         </AuthProvider>
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     </Router>
   );
 }

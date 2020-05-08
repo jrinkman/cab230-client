@@ -254,6 +254,7 @@ export default function AuthDialog(props) {
             <TextField
               disabled={isProcessing}
               autoFocus
+              color="secondary"
               variant="outlined"
               margin="dense"
               name="email"
@@ -265,6 +266,7 @@ export default function AuthDialog(props) {
             />
             <TextField
               disabled={isProcessing}
+              color="secondary"
               variant="outlined"
               margin="dense"
               name="password"
@@ -284,6 +286,7 @@ export default function AuthDialog(props) {
             <TextField
               disabled={isProcessing}
               autoFocus
+              color="secondary"
               variant="outlined"
               margin="dense"
               name="email"
@@ -295,6 +298,7 @@ export default function AuthDialog(props) {
             />
             <TextField
               disabled={isProcessing}
+              color="secondary"
               variant="outlined"
               margin="dense"
               name="password"
