@@ -103,7 +103,7 @@ export default function Details() {
         <ToolbarPadding />
         {(() => {
           // If an error occured, display it
-          if (error) return <ErrorMessage message={error} helper="Please try again" />;
+          if (error) return <ErrorMessage message={error} helper="Please reload the page / try a different stock" />;
 
           // If we're loading, show the loading display
           if (loading) {

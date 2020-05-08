@@ -313,7 +313,7 @@ export default function AuthDialog(props) {
       </DialogContent>
       <DialogActions>
         {fullScreen && (
-          <Button onClick={onClose} color="secondary">
+          <Button onClick={onClose} color="primary">
             Close
           </Button>
         )}
@@ -324,7 +324,7 @@ export default function AuthDialog(props) {
                 || formLogin.values.email.length < 1
                 || formLogin.values.password.length < 1}
               onClick={handleLogin}
-              color="primary"
+              color="secondary"
             >
               Login
             </Button>
@@ -335,7 +335,7 @@ export default function AuthDialog(props) {
                 || formRegister.values.email.length < 1
                 || formRegister.values.password.length < 1}
               onClick={handleRegister}
-              color="primary"
+              color="secondary"
             >
               Register
             </Button>
