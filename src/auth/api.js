@@ -34,12 +34,12 @@ class API {
     return this.__api(`/stocks/symbols${industry ? `?industry=${industry}` : ''}`, 'get');
   }
 
-  async getStock(symbol) {
+  async getStockLatest(symbol) {
     // Make the HTTP request via axios
     return this.__api(`/stocks/${symbol}`, 'get');
   }
 
-  async getStocksAuthed(symbol, from, to) {
+  async getStockAuthed(symbol, from, to) {
     // Make the HTTP request via axios
     return this.__api(`/stocks/authed/${symbol}?from=${from}&to=${to}`, 'get');
   }

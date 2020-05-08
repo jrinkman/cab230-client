@@ -10,10 +10,14 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
+import Tooltip from '@material-ui/core/Tooltip';
 import { makeStyles } from '@material-ui/core/styles';
 
 // Material UI Lab components
 import Skeleton from '@material-ui/lab/Skeleton';
+
+// React router links
+import { useHistory } from 'react-router-dom';
 
 // Table toolbar & header components
 import StockTableHead from '../StockTableHead';
@@ -35,6 +39,9 @@ export default function StockTable(props) {
 
   // Generate our style class names
   const classes = useStyles();
+
+  // Initialize our router history hook
+  const history = useHistory();
 
   // Create hook states for ordering, pagination, etc
   const [order, setOrder] = React.useState('asc');
@@ -98,7 +105,7 @@ export default function StockTable(props) {
                     <TableRow key={key}>
                       {[...Array.from(Array(3).keys())].map((innerKey) => (
                         <TableCell key={innerKey}>
-                          <Skeleton width="100%" height={20} />
+                          <Skeleton width="40%" height={20} />
                         </TableCell>
                       ))}
                     </TableRow>
@@ -109,25 +116,34 @@ export default function StockTable(props) {
                       const labelId = `stock-table-checkbox-${index}`;
 
                       return (
-                        <TableRow
-                          hover
-                          className={classes.tableRow}
-                          role="button"
-                          onClick={(event) => { console.log(event.target); }}
-                          tabIndex={-1}
+                        <Tooltip
+                          arrow
+                          interactive
                           key={row.symbol}
+                          title="View Information"
+                          aria-label="view stock information"
                         >
-                          <TableCell component="th" id={labelId} scope="row">
-                            <Chip
-                              label={row.symbol}
-                              color="secondary"
-                              size="small"
-                              style={{ fontWeight: 700 }}
-                            />
-                          </TableCell>
-                          <TableCell>{row.name}</TableCell>
-                          <TableCell>{row.industry}</TableCell>
-                        </TableRow>
+                          <TableRow
+                            hover
+                            className={classes.tableRow}
+                            role="button"
+                            tabIndex={-1}
+                            onClick={() => {
+                              history.push(`/stocks/${row.symbol}`);
+                            }}
+                          >
+                            <TableCell component="th" id={labelId} scope="row">
+                              <Chip
+                                label={row.symbol}
+                                color="secondary"
+                                size="small"
+                                style={{ fontWeight: 700 }}
+                              />
+                            </TableCell>
+                            <TableCell>{row.name}</TableCell>
+                            <TableCell>{row.industry}</TableCell>
+                          </TableRow>
+                        </Tooltip>
                       );
                     })}
                 </TableBody>

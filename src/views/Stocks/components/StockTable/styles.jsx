@@ -42,6 +42,7 @@ export default (theme) => ({
     flexGrow: 1,
     flexDirection: 'column',
     alignItems: 'center',
+    textAlign: 'center',
     marginBottom: theme.spacing(2.5),
   },
   emptyMessage: {

@@ -20,8 +20,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import HomeIcon from '@material-ui/icons/HomeRounded';
-import BarsIcon from '@material-ui/icons/BarChartRounded';
-import BusinessIcon from '@material-ui/icons/BusinessRounded';
 import ChartIcon from '@material-ui/icons/TimelineRounded';
 import DarkModeIcon from '@material-ui/icons/Brightness2Rounded';
 import LightModeIcon from '@material-ui/icons/Brightness5Rounded';
@@ -245,16 +243,8 @@ export default function Layout(props) {
               <ListItemText primary="Home" />
             </NavListItem>
             <NavListItem to="/stocks">
-              <ListItemIcon><BusinessIcon /></ListItemIcon>
-              <ListItemText primary="Stocks" />
-            </NavListItem>
-            <NavListItem to="/quote">
-              <ListItemIcon><BarsIcon /></ListItemIcon>
-              <ListItemText primary="Quote" />
-            </NavListItem>
-            <NavListItem to="/history">
               <ListItemIcon><ChartIcon /></ListItemIcon>
-              <ListItemText primary="Price History" />
+              <ListItemText primary="Stocks" />
             </NavListItem>
           </List>
         </Drawer>

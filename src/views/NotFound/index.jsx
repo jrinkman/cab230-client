@@ -40,7 +40,7 @@ export default function NotFound() {
         <div className={classes.imgWrapper}>
           <img className={classes.img} src="images/not-found.png" alt="" />
         </div>
-        <Button component={Link} to="/" variant="contained" color="primary" size="large">take me home</Button>
+        <Button component={Link} to="/" variant="contained" color="secondary" size="large">take me home</Button>
       </div>
     </motion.div>
   );

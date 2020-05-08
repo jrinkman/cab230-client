@@ -7,6 +7,7 @@ import {
 // View imports
 import Home from './views/Home';
 import Stocks from './views/Stocks';
+import Details from './views/Details';
 import NotFound from './views/NotFound';
 
 // Layout import
@@ -29,7 +30,8 @@ export default function Main(props) {
             exact
             component={Home}
           />
-          <Route path="/stocks" component={Stocks} />
+          <Route exact path="/stocks" component={Stocks} />
+          <Route path="/stocks/:symbol" component={Details} />
           <Route component={NotFound} />
         </Switch>
       </AnimatePresence>

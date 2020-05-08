@@ -13,7 +13,7 @@ const light = {
   palette: {
     type: 'light',
     text: {
-      primary: blueGrey[900],
+      primary: blueGrey[800],
     },
     secondary: {
       light: blueGrey[300],

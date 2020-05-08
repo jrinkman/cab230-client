@@ -9,9 +9,9 @@ export default (theme) => ({
     bottom: 0,
     overflowY: 'auto',
   },
-  chart: {
-    width: '100%',
-    height: '100%',
+  authRequired: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(5),
   },
   container: {
     [theme.breakpoints.down('sm')]: {
@@ -26,7 +26,7 @@ export default (theme) => ({
     marginBottom: theme.spacing(3),
   },
   header: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    fontSize: 14,
+    fontWeight: 600,
   },
 });

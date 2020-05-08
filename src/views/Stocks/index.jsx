@@ -27,8 +27,9 @@ import { motion } from 'framer-motion';
 // Table imports
 import StockTable from './components/StockTable';
 
-// Toolbar padding import
+// Toolbar & error message padding import
 import ToolbarPadding from '../../components/ToolbarPadding';
+import ErrorMessage from '../../components/ErrorMessage';
 
 // Page animations
 import { page } from '../../motion';
@@ -82,6 +83,9 @@ export default function Stocks() {
   React.useEffect(() => {
     async function getStockSymbols() {
       try {
+        // Reset the error the state
+        setError(null);
+
         // Reset the page
         setPage(0);
 
@@ -120,7 +124,7 @@ export default function Stocks() {
         <ToolbarPadding />
         <Grid className={classes.grid} container spacing={2} alignItems="center">
           <Grid item xs={12} sm="auto" style={{ flexGrow: 1 }}>
-            <Typography variant="h4" style={{ fontWeight: 600 }}>Stocks</Typography>
+            <Typography variant="h4" style={{ fontWeight: 700 }}>Stocks</Typography>
             <Typography variant="h6" color="textSecondary">View available stocks</Typography>
           </Grid>
           <Grid item xs={12} sm={5} md={4} lg={3}>
@@ -128,12 +132,11 @@ export default function Stocks() {
               freeSolo
               fullWidth
               id="free-solo-2-demo"
-              disableClearable
               options={sectors}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Search (Press Enter)"
+                  label="Industry Search (Press Enter)"
                   margin="normal"
                   variant="outlined"
                   onKeyDown={(e) => {
@@ -174,13 +177,16 @@ export default function Stocks() {
             />
           </Grid>
         </Grid>
-        <StockTable
-          loading={loading}
-          page={currentPage}
-          setPage={setPage}
-          rows={rows}
-          style={{ flexGrow: 1 }}
-        />
+        {error ? <ErrorMessage message={error} helper="Try reloading the page to try again" />
+          : (
+            <StockTable
+              loading={loading}
+              page={currentPage}
+              setPage={setPage}
+              rows={rows}
+              style={{ flexGrow: 1 }}
+            />
+          )}
       </Container>
     </motion.div>
   );
