@@ -12,7 +12,7 @@ export default (theme, latest) => [
   },
   {
     header: 'CURRENT AS AT',
-    value: new Date(latest.timestamp).toLocaleString(),
+    value: new Date(latest.timestamp).toLocaleDateString(),
   },
   {
     header: 'OPEN',

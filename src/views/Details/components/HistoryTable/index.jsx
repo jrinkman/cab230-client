@@ -114,6 +114,7 @@ export default function HistoryTable(props) {
       <Grid container padding={2}>
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6} style={{ padding: '16px' }}>
           <MobileDatePicker
+            inputFormat="dd/MM/yyyy"
             disabled={loading}
             label="Start Date"
             renderInput={(inputProps) => <TextField variant="filled" fullWidth {...inputProps} />}
@@ -125,6 +126,7 @@ export default function HistoryTable(props) {
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6} style={{ padding: '16px' }}>
           <MobileDatePicker
+            inputFormat="dd/MM/yyyy"
             disabled={loading}
             label="End Date"
             renderInput={(inputProps) => <TextField variant="filled" fullWidth {...inputProps} />}
