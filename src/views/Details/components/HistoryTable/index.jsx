@@ -112,7 +112,7 @@ export default function HistoryTable(props) {
   return (
     <Card className={classes.card}>
       <Grid container padding={2}>
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6} style={{ padding: '16px' }}>
+        <Grid item xs={6} sm={6} md={6} lg={6} xl={6} style={{ padding: '16px' }}>
           <MobileDatePicker
             inputFormat="dd/MM/yyyy"
             disabled={loading && !error}
@@ -124,7 +124,7 @@ export default function HistoryTable(props) {
             maxDate={startDate}
           />
         </Grid>
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6} style={{ padding: '16px' }}>
+        <Grid item xs={6} sm={6} md={6} lg={6} xl={6} style={{ padding: '16px' }}>
           <MobileDatePicker
             inputFormat="dd/MM/yyyy"
             disabled={loading && !error}
@@ -138,7 +138,7 @@ export default function HistoryTable(props) {
         </Grid>
         { /* eslint-disable-next-line no-nested-ternary */ }
         {!loading && !error ? (
-          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+          <Grid item xs={12} sm={12} md={12} lg={12} xl={12} style={{ overflowX: 'auto' }}>
             <ResponsiveContainer minWidth={550} width="100%" height="100%">
               <LineChart
                 data={history}

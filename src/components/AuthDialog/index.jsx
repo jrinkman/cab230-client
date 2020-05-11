@@ -18,6 +18,8 @@ import Collapse from '@material-ui/core/Collapse';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 
+// Notifications hook
+import { useSnackbar } from 'notistack';
 
 // Component styles
 import styles from './styles';
@@ -65,6 +67,9 @@ function a11yProps(index) {
 export default function AuthDialog(props) {
   // Destructure our props
   const { auth, open, onClose } = props;
+
+  // Notifications hook
+  const { enqueueSnackbar } = useSnackbar();
 
   // Create a tab value state
   const [tab, setTab] = React.useState(0);
@@ -141,6 +146,9 @@ export default function AuthDialog(props) {
 
       // Close the dialog
       onClose();
+
+      // Show a success notification
+      enqueueSnackbar('Logged in successfully', { variant: 'success' });
     } catch (error) {
       // Update the login form state with the error
       setFormLogin({
@@ -151,7 +159,7 @@ export default function AuthDialog(props) {
 
     // once the request is sent, update state again
     setIsProcessing(false);
-  }, [isProcessing, formLogin, auth.api, onClose]);
+  }, [isProcessing, formLogin, auth.api, onClose, enqueueSnackbar]);
 
   // Create a register callback function
   const handleRegister = React.useCallback(async () => {
@@ -184,7 +192,8 @@ export default function AuthDialog(props) {
       // Close the dialog
       onClose();
 
-      // Update the login values
+      // Show a success notification
+      enqueueSnackbar('Registered & logged in successfully', { variant: 'success' });
     } catch (error) {
       // Update the login form state with the error
       setFormRegister({
@@ -195,7 +204,7 @@ export default function AuthDialog(props) {
       // Disable the processing flag
       setIsProcessing(false);
     }
-  }, [isProcessing, formRegister, auth.api, onClose]);
+  }, [isProcessing, formRegister, auth.api, onClose, enqueueSnackbar]);
 
   // Grab the theme provider
   const theme = useTheme();

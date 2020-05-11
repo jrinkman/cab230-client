@@ -139,6 +139,7 @@ export default function Stocks() {
                   label="Industry Search (Press Enter)"
                   margin="normal"
                   variant="outlined"
+                  placeholder="E.G. Health Care"
                   onKeyDown={(e) => {
                     if (e.keyCode === 13) {
                       setSearch(e.target.value);

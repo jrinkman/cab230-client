@@ -4,6 +4,9 @@ import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
+// Notifications provider
+import { SnackbarProvider } from 'notistack';
+
 // Material UI picker imports
 import { LocalizationProvider } from '@material-ui/pickers';
 import LuxonUtils from '@material-ui/pickers/adapter/luxon';
@@ -38,8 +41,13 @@ function App() {
       <LocalizationProvider dateAdapter={LuxonUtils}>
         <AuthProvider>
           <ThemeProvider theme={currentTheme}>
-            <CssBaseline />
-            <Main theme={theme} toggleDarkMode={toggleDarkMode} />
+            <SnackbarProvider
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+              classes={{ variantSuccess: 'snackbar-white' }}
+            >
+              <CssBaseline />
+              <Main theme={theme} toggleDarkMode={toggleDarkMode} />
+            </SnackbarProvider>
           </ThemeProvider>
         </AuthProvider>
       </LocalizationProvider>

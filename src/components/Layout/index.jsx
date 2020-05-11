@@ -25,7 +25,7 @@ import DarkModeIcon from '@material-ui/icons/Brightness2Rounded';
 import LightModeIcon from '@material-ui/icons/Brightness5Rounded';
 
 // React router nav link
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 // Authentication dialogs
 import AuthDialog from '../AuthDialog';
@@ -35,6 +35,30 @@ import authContext from '../../auth/context';
 
 // Define a set drawer width
 const drawerWidth = 240;
+
+// Function for getting header text
+/**
+ * @param {String} route
+ */
+function getHeaderText(route) {
+  const parts = route.split('/');
+  const segments = parts.slice(1, parts.length);
+
+  // Account for the dynamic stock routes
+  if (segments.length > 1) {
+    if (segments[0] !== 'stocks') {
+      return 'Not Found';
+    }
+    return `Stocks (${segments[1]})`;
+  }
+
+  // Else, switch through the default routes
+  switch (segments[0]) {
+    default: return 'Not Found';
+    case '': return 'Home';
+    case 'stocks': return 'Stocks';
+  }
+}
 
 // Generate the layout styles
 const useStyles = makeStyles((theme) => ({
@@ -125,6 +149,9 @@ export default function Layout(props) {
   // Generate class name
   const classes = useStyles();
 
+  // Get our location
+  const location = useLocation();
+
   // Create an open-close boolean state
   const [open, setOpen] = React.useState(false);
 
@@ -186,7 +213,7 @@ export default function Layout(props) {
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h6" noWrap>
-              StockAnalytics
+              {getHeaderText(location.pathname)}
             </Typography>
             <div>
               <IconButton
