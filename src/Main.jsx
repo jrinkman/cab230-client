@@ -11,7 +11,7 @@ import Details from './views/Details';
 import NotFound from './views/NotFound';
 
 // Layout import
-import Layout from './components/Layout';
+import Layout from './components/Layout/new';
 
 export default function Main(props) {
   // Grab our theme props

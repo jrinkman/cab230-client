@@ -18,9 +18,6 @@ import SearchIcon from '@material-ui/icons/SearchRounded';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 
-// React router imports
-// import { Link } from 'react-router-dom';
-
 // Framer Motion div
 import { motion } from 'framer-motion';
 
@@ -81,6 +78,7 @@ export default function Stocks() {
 
   // Create an effect hook for the stock symbols
   React.useEffect(() => {
+    let cancelled = false;
     async function getStockSymbols() {
       try {
         // Reset the error the state
@@ -95,18 +93,28 @@ export default function Stocks() {
         // Retrieve the stock symbols
         const symbols = await auth.api.getStockSymbols(search || null);
 
-        // Disable the loading animation
-        setLoading(false);
+        // If our component is still mounted, update the state
+        if (!cancelled) {
+          // Disable the loading animation
+          setLoading(false);
 
-        // Update the symbols in the table props
-        setRows(symbols);
+          // Update the symbols in the table props
+          setRows(symbols);
+        }
       } catch (reqError) {
-        // Update the error state
-        setError(getErrorMessage(reqError));
+        // Update the error state if we're still mounted
+        if (!cancelled) {
+          setError(getErrorMessage(reqError));
+        }
       }
     }
 
+    // Trigger the async function
     getStockSymbols();
+
+    // Return a callback to enable the cancelled flag
+    // when we unmount
+    return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
@@ -178,7 +186,9 @@ export default function Stocks() {
             />
           </Grid>
         </Grid>
-        {error ? <ErrorMessage message={error} helper="Try reloading the page to try again" />
+        {/* eslint-disable-next-line no-nested-ternary */}
+        {error ? error === 'Industry sector not found' ? <ErrorMessage title="Sector not found" message="Please try a different search term" image="empty" />
+          : <ErrorMessage message={error} helper="Try reloading the page to try again" />
           : (
             <StockTable
               loading={loading}

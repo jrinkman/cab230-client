@@ -16,12 +16,12 @@ export default (theme) => ({
     fontSize: 13,
   },
   avatar: {
-    height: 56,
-    width: 56,
+    height: 40,
+    width: 40,
   },
   icon: {
-    height: 32,
-    width: 32,
+    height: 23,
+    width: 23,
   },
   difference: {
     marginTop: theme.spacing(2),

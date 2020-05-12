@@ -42,7 +42,7 @@ function App() {
         <AuthProvider>
           <ThemeProvider theme={currentTheme}>
             <SnackbarProvider
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               classes={{ variantSuccess: 'snackbar-white' }}
             >
               <CssBaseline />

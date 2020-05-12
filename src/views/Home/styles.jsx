@@ -3,23 +3,28 @@ export default (theme) => ({
     position: 'absolute',
     display: 'flex',
     flexGrow: '1',
-    right: 30,
-    left: 30,
-    top: 30,
-    bottom: 30,
+    right: 0,
+    left: 0,
+    top: 0,
+    bottom: 0,
+    overflowY: 'auto',
   },
   root: {
+    padding: 30,
     display: 'flex',
-    flexGrow: 1,
+    height: '100%',
+    width: '100vw',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
     textAlign: 'center',
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'center',
+    },
+  },
+  title: {
+    fontWeight: 700,
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(3),
-    },
-    [theme.breakpoints.up('md')]: {
-      marginBottom: theme.spacing(2),
     },
   },
   subtitle: {
@@ -32,5 +37,9 @@ export default (theme) => ({
   img: {
     width: '100%',
     height: '100%',
+  },
+  goButton: {
+    minHeight: 42,
+    marginBottom: theme.spacing(2),
   },
 });

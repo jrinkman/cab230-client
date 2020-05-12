@@ -1,7 +1,7 @@
 export default (theme) => ({
   card: {
     display: 'flex',
-    height: 450,
+    height: 440,
     marginBottom: theme.spacing(4),
   },
   loading: {

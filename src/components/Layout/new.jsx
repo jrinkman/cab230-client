@@ -1,30 +1,28 @@
 import React from 'react';
-import clsx from 'clsx';
 
 // Material UI imports
-import Button from '@material-ui/core/Button';
-import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import Hidden from '@material-ui/core/Hidden';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 // Material UI icons
 import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import HomeIcon from '@material-ui/icons/HomeRounded';
 import ChartIcon from '@material-ui/icons/TimelineRounded';
 import DarkModeIcon from '@material-ui/icons/Brightness2Rounded';
 import LightModeIcon from '@material-ui/icons/Brightness5Rounded';
 
-// React router nav link
+// React router nav link and location hook
 import { NavLink, useLocation } from 'react-router-dom';
 
 // Authentication dialogs
@@ -34,7 +32,7 @@ import AuthDialog from '../AuthDialog';
 import authContext from '../../auth/context';
 
 // Define a set drawer width
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 // Function for getting header text
 /**
@@ -60,64 +58,41 @@ function getHeaderText(route) {
   }
 }
 
-// Generate the layout styles
+// Define the layout styles
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexGrow: 1,
     height: '100%',
   },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+  },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
   },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+  barPrefix: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
   menuButton: {
-    marginRight: 36,
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
   },
-  hide: {
-    display: 'none',
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-  },
-  title: {
-    flexGrow: 1,
-  },
+  // necessary for content to be below app bar
   toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
+    [theme.breakpoints.up('sm')]: {
+      ...theme.mixins.toolbar,
+    },
+  },
+  drawerPaper: {
+    width: drawerWidth,
   },
   content: {
     position: 'relative',
@@ -140,43 +115,29 @@ const useStyles = makeStyles((theme) => ({
 
 // Export the layout component
 export default function Layout(props) {
-  // Grab our children from the props
-  const { children, theme, toggleDarkMode } = props;
-
-  // Grab our auth context
-  const auth = React.useContext(authContext);
+  // Destructure the props
+  const {
+    children, theme, toggleDarkMode,
+  } = props;
 
   // Generate class name
   const classes = useStyles();
 
-  // Get our location
+  // Get our router location
   const location = useLocation();
 
+  // Grab our auth context
+  const auth = React.useContext(authContext);
+
   // Create an open-close boolean state
-  const [open, setOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
   // Create an open-close login dialog state
   const [authOpen, setAuthOpen] = React.useState(false);
 
-  function NavListItem(navProps) {
-    return (
-      <ListItem
-        button
-        component={NavLink}
-        activeClassName={classes.listItemActive}
-        {...navProps}
-      />
-    );
-  }
-
-  // Create a handler for opening the sidebar
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  // Create a handler for closing the sidebar
-  const handleDrawerClose = () => {
-    setOpen(false);
+  // Create a handler for toggling the sidebar open state
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
   // Create a handler for opening the sidebar
@@ -189,33 +150,60 @@ export default function Layout(props) {
     setAuthOpen(false);
   };
 
+  // Small component for navbar items
+  function NavListItem(navProps) {
+    return (
+      <ListItem
+        button
+        component={NavLink}
+        onClick={() => {
+          setMobileOpen(false);
+        }}
+        activeClassName={classes.listItemActive}
+        {...navProps}
+      />
+    );
+  }
+
+  // Abstract the drawer component
+  const drawer = (
+    <div>
+      <div className={classes.toolbar} />
+      <List>
+        <NavListItem exact to="/">
+          <ListItemIcon><HomeIcon /></ListItemIcon>
+          <ListItemText primary="Home" primaryTypographyProps={{ style: { fontWeight: 500 } }} />
+        </NavListItem>
+        <NavListItem to="/stocks">
+          <ListItemIcon><ChartIcon /></ListItemIcon>
+          <ListItemText primary="Stocks" primaryTypographyProps={{ style: { fontWeight: 500 } }} />
+        </NavListItem>
+      </List>
+    </div>
+  );
+
+  // Render the app's layout
   return (
     <>
       <AuthDialog auth={auth} open={authOpen} onClose={handleAuthClose} />
       <div className={classes.root}>
         <CssBaseline />
-        <AppBar
-          position="fixed"
-          className={clsx(classes.appBar, {
-            [classes.appBarShift]: open,
-          })}
-        >
+        <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
             <IconButton
               color="inherit"
               aria-label="open drawer"
-              onClick={handleDrawerOpen}
               edge="start"
-              className={clsx(classes.menuButton, {
-                [classes.hide]: open,
-              })}
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
             >
               <MenuIcon />
             </IconButton>
-            <Typography className={classes.title} variant="h6" noWrap>
+            <Typography variant="h6" noWrap>
+              <b className={classes.barPrefix}>Stock Analytics | </b>
               {getHeaderText(location.pathname)}
             </Typography>
-            <div>
+            <div style={{ marginLeft: 'auto' }}>
               <IconButton
                 color="inherit"
                 className={classes.darkModeToggle}
@@ -245,37 +233,37 @@ export default function Layout(props) {
             </div>
           </Toolbar>
         </AppBar>
-        <Drawer
-          variant="permanent"
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          })}
-          classes={{
-            paper: clsx({
-              [classes.drawerOpen]: open,
-              [classes.drawerClose]: !open,
-            }),
-          }}
-        >
-          <div className={classes.toolbar}>
-            <IconButton onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </div>
-          <Divider />
-          <List>
-            <NavListItem exact to="/">
-              <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary="Home" />
-            </NavListItem>
-            <NavListItem to="/stocks">
-              <ListItemIcon><ChartIcon /></ListItemIcon>
-              <ListItemText primary="Stocks" />
-            </NavListItem>
-          </List>
-        </Drawer>
+        <nav className={classes.drawer} aria-label="mailbox folders">
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation="css">
+            <Drawer
+              variant="temporary"
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              variant="permanent"
+              open
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
         <main className={classes.content}>
+          <div className={classes.toolbar} />
           {React.Children.toArray(children)}
         </main>
       </div>
