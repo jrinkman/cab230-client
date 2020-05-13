@@ -64,7 +64,7 @@ export default function StatCard(props) {
                     {header || ''}
                   </Typography>
                   {Icon ? (
-                    <Typography variant="h4">
+                    <Typography variant="h5">
                       {Math.round(value * 100) / 100}
                     </Typography>
                   ) : (

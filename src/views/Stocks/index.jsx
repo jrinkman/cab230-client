@@ -78,7 +78,9 @@ export default function Stocks() {
 
   // Create an effect hook for the stock symbols
   React.useEffect(() => {
+    // Create a cancelled flag
     let cancelled = false;
+
     async function getStockSymbols() {
       try {
         // Reset the error the state

@@ -60,6 +60,9 @@ export default function HistoryTable(props) {
 
   // Create a history side effect
   React.useEffect(() => {
+    // Create a cancelled flag
+    let cancelled = false;
+
     async function getStockAuthed() {
       try {
         // Reset the error the state
@@ -75,26 +78,37 @@ export default function HistoryTable(props) {
           endDate.toISODate(),
         );
 
-        // Disable the loading animation
-        setLoading(false);
+        // Ensure we're mounted before
+        // updating the state with the stock data
+        if (!cancelled) {
+          // Disable the loading animation
+          setLoading(false);
 
-        // Update the stock history data
-        setHistory(data.reverse().map(({
-          timestamp, open, high, low, close,
-        }) => ({
-          name: DateTime.fromISO(timestamp).toFormat('dd LLL yyyy'),
-          open,
-          high,
-          low,
-          close,
-        })));
+          // Update the stock history data
+          setHistory(data.reverse().map(({
+            timestamp, open, high, low, close,
+          }) => ({
+            name: DateTime.fromISO(timestamp).toFormat('dd LLL yyyy'),
+            open,
+            high,
+            low,
+            close,
+          })));
+        }
       } catch (reqError) {
-        // Update the error state
-        setError(getErrorMessage(reqError));
+        // Ensure we're mounted before updating the error state
+        if (!cancelled) {
+          // Update the error state
+          setError(getErrorMessage(reqError));
+        }
       }
     }
 
     getStockAuthed();
+
+    // Return a callback to enable the cancelled flag
+    // when we unmount
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate]);
 
@@ -121,7 +135,7 @@ export default function HistoryTable(props) {
             value={startDate}
             onChange={(date) => setStartDate(date)}
             minDate={DateTime.fromObject({ year: 1990 })}
-            maxDate={startDate}
+            maxDate={endDate}
           />
         </Grid>
         <Grid item xs={6} sm={6} md={6} lg={6} xl={6} style={{ padding: '16px' }}>
@@ -145,6 +159,7 @@ export default function HistoryTable(props) {
                 margin={{
                   left: 10, top: 30, right: 70, bottom: 10,
                 }}
+                style={{ overflowY: 'hidden' }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis tick={{ fill: textPalette.secondary, fontWeight: 500 }} dataKey="name" />

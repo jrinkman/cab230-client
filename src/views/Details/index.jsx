@@ -63,6 +63,9 @@ export default function Details() {
 
   // Create an effect hook for the stock symbols
   React.useEffect(() => {
+    // Create a cancelled flag
+    let cancelled = false;
+
     async function getStockLatest() {
       try {
         // Reset the error the state
@@ -74,18 +77,28 @@ export default function Details() {
         // Retrieve the stock symbols
         const latestStock = await auth.api.getStockLatest(symbol);
 
-        // Update the state with the latest stock data
-        setLatest(latestStock);
+        // If our component is still mounted, update the state
+        if (!cancelled) {
+          // Update the state with the latest stock data
+          setLatest(latestStock);
 
-        // Disable the loading animation
-        setLoading(false);
+          // Disable the loading animation
+          setLoading(false);
+        }
       } catch (reqError) {
-        // Update the error state
-        setError(getErrorMessage(reqError));
+        // Ensure we're mounted before updating the error state
+        if (!cancelled) {
+          // Update the error state
+          setError(getErrorMessage(reqError));
+        }
       }
     }
 
     getStockLatest();
+
+    // Return a callback to enable the cancelled flag
+    // when we unmount
+    return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [symbol]);
 
